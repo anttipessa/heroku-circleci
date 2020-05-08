@@ -1,14 +1,16 @@
+FROM ubuntu:16.04
 
-FROM node:10
-
-WORKDIR /usr/src/app
- 
-COPY package*.json ./
-
-RUN npm install
+WORKDIR /app
 
 COPY . .
 
+RUN apt-get update && apt-get install -y curl \
+  && curl -sL https://deb.nodesource.com/setup_12.x | bash \
+  && apt-get install -y nodejs \
+  && apt-get purge -y --auto-remove curl \
+  && rm -rf /var/lib/apt/lists/* \
+  && npm install
+
 EXPOSE $PORT
 
-CMD [ "npm", "start" ]
+CMD ["npm", "start" ]
