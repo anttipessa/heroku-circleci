@@ -1,17 +1,19 @@
+  
+FROM alpine
 
-FROM node:10
-
-WORKDIR /usr/src/app
- 
-COPY package*.json ./
-RUN npm install
-RUN npm build
-RUN npm install -g serve 
+WORKDIR /usr/app
 
 COPY . .
 
-EXPOSE $PORT
+RUN apk add --no-cache git nodejs nodejs-npm && \
+    npm install && \
+    npm install -g serve && \
+    npm run build && \
+    apk del git && \
+    addgroup app && \
+    adduser -D -G app app && \
+    chown -R app:app /usr/app
 
-CMD [ "serve", "-s" "build" ]
+USER app
 
-
+CMD serve -s -l $PORT dist
