@@ -16,4 +16,4 @@ RUN apk add --no-cache git nodejs nodejs-npm && \
 
 USER app
 
-CMD serve -s -l $PORT dist
+CMD npm start
